@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10130e">
+  <meta name="description" content="鬼趴 PEEK 输入节奏训练器，练习游龙步、断趴、错位与探身的动作衔接。">
+  <title>鬼趴 PEEK 训练舱</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-theme="dark">
+  <a class="skip-link" href="#training">跳到训练台</a>
+
+  <header class="topbar">
+    <a class="brand" href="#training">
+      <span class="brand-main">鬼趴</span>
+      <span class="brand-divider">//</span>
+      <span class="brand-code">PEEK LAB</span>
+    </a>
+
+    <nav class="nav" aria-label="页面导航">
+      <a href="#training">训练台</a>
+      <a href="#mechanics">动作拆解</a>
+      <a href="#field-notes">训练说明</a>
+    </nav>
+
+    <div class="top-actions">
+      <button class="text-button" id="sound-toggle" type="button" aria-pressed="false">声音 关</button>
+      <button class="text-button" id="theme-toggle" type="button">亮色</button>
+      <button class="primary-button" id="challenge-button" type="button">开始 45 秒挑战</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="training-section" id="training" aria-labelledby="training-title">
+      <div class="training-heading">
+        <div>
+          <p class="context-label">输入节奏模拟</p>
+          <h1 id="training-title">把视角错位练成肌肉记忆</h1>
+        </div>
+        <p class="training-summary">用趴伏前段制造姿态差，再用冲刺打断并选择探身或横移闪身。自由操作时随意试，跟随指令时再练节奏。</p>
+      </div>
+
+      <div class="training-grid">
+        <aside class="control-panel" aria-label="训练控制与动作链">
+          <div class="panel-header">
+            <div>
+              <p class="micro-label">动作链</p>
+              <h2>四拍衔接</h2>
+            </div>
+            <span class="session-state" id="session-state">待机</span>
+          </div>
+
+          <div class="mode-block">
+            <div class="block-title">
+              <span>当前模式</span>
+              <span class="range-readout" id="mode-readout">自由操作</span>
+            </div>
+            <div class="segmented" role="group" aria-label="选择操作模式">
+              <button type="button" data-mode="free" aria-pressed="true">自由操作</button>
+              <button type="button" data-mode="training" aria-pressed="false">跟随指令</button>
+            </div>
+            <p class="mode-copy" id="mode-copy">随意移动、趴伏和探身，不判定顺序。</p>
+          </div>
+
+          <ol class="stage-list" id="stage-list">
+            <li class="stage" data-stage="sprint">
+              <span class="stage-key">W + SHIFT</span>
+              <div>
+                <strong>游龙步</strong>
+                <p>先动起来，给后续断趴留出速度。</p>
+              </div>
+              <span class="stage-mark" aria-hidden="true"></span>
+            </li>
+            <li class="stage" data-stage="prone">
+              <span class="stage-key">Z / C</span>
+              <div>
+                <strong>断趴</strong>
+                <p>趴伏动作刚开始时，松开再按 Shift。</p>
+              </div>
+              <span class="stage-mark" aria-hidden="true"></span>
+            </li>
+            <li class="stage" data-stage="ghost">
+              <span class="stage-key">等待错位</span>
+              <div>
+                <strong>GHOST 窗口</strong>
+                <p>镜头状态恢复，敌方视角仍处于低位。</p>
+              </div>
+              <span class="stage-mark" aria-hidden="true"></span>
+            </li>
+            <li class="stage" data-stage="lean">
+              <span class="stage-key" id="peek-stage-key">E / Q</span>
+              <div>
+                <strong>探身或闪身</strong>
+                <p>围绕掩体拉出枪线，再松开回到掩护。</p>
+              </div>
+              <span class="stage-mark" aria-hidden="true"></span>
+            </li>
+          </ol>
+
+          <div class="peek-method-block">
+            <div class="block-title">
+              <span>指令探身方式</span>
+              <span class="range-readout" id="peek-method-readout">探身 E/Q</span>
+            </div>
+            <div class="segmented" role="group" aria-label="选择探身方式">
+              <button type="button" data-peek-method="lean" aria-pressed="true">探身 E/Q</button>
+              <button type="button" data-peek-method="strafe" aria-pressed="false">闪身 A/D</button>
+            </div>
+          </div>
+
+          <div class="difficulty-block">
+            <div class="block-title">
+              <span>判定范围</span>
+              <span class="range-readout" id="range-readout">标准</span>
+            </div>
+            <div class="segmented" role="group" aria-label="选择判定难度">
+              <button type="button" data-difficulty="beginner" aria-pressed="false">入门</button>
+              <button type="button" data-difficulty="standard" aria-pressed="true">标准</button>
+              <button type="button" data-difficulty="extreme" aria-pressed="false">极限</button>
+            </div>
+            <p class="range-copy" id="range-copy">断趴 160-650 ms · 探身响应 800 ms 内</p>
+          </div>
+
+          <div class="keymap">
+            <div class="block-title">
+              <span>键位约定</span>
+              <span class="muted">可映射到你的游戏键位</span>
+            </div>
+            <dl>
+              <div><dt>游龙步</dt><dd>W + Shift</dd></div>
+              <div><dt>起趴</dt><dd>Z / C</dd></div>
+              <div><dt>断趴</dt><dd>Shift</dd></div>
+              <div><dt>探身</dt><dd>E 右 / Q 左</dd></div>
+              <div><dt>闪身</dt><dd>A 左 / D 右</dd></div>
+            </dl>
+          </div>
+
+          <div class="session-stats" aria-label="本轮数据">
+            <div>
+              <span>本轮得分</span>
+              <strong id="score-value">0</strong>
+            </div>
+            <div>
+              <span>连续成功</span>
+              <strong id="combo-value">0</strong>
+            </div>
+            <div>
+              <span>最近响应</span>
+              <strong id="reaction-value">--</strong>
+            </div>
+            <div>
+              <span>历史最佳</span>
+              <strong id="best-value">0</strong>
+            </div>
+          </div>
+
+          <button class="secondary-button full-width" id="reset-button" type="button">清空本轮记录</button>
+        </aside>
+
+        <div class="arena-column">
+          <div class="arena-toolbar">
+            <div class="live-state">
+              <span class="live-indicator" id="live-indicator" aria-hidden="true"></span>
+              <span id="live-status">等待输入</span>
+            </div>
+            <div class="challenge-clock">
+              <span id="clock-label">自由训练</span>
+              <strong id="clock-value">--</strong>
+            </div>
+          </div>
+
+          <div class="arena" id="arena" tabindex="0" aria-label="第一人称训练视图，点击后可直接使用键盘">
+            <canvas id="arena-canvas" aria-hidden="true"></canvas>
+            <div class="scanline" aria-hidden="true"></div>
+
+            <div class="arena-corners" aria-hidden="true">
+              <span></span><span></span><span></span><span></span>
+            </div>
+
+            <div class="view-label">
+              <span>CAM 01</span>
+              <span id="posture-value">站立</span>
+            </div>
+
+            <div class="enemy-status" id="enemy-status" data-state="covered">
+              <span>ENEMY 01</span>
+              <strong id="enemy-status-text">直架中</strong>
+              <small id="exposure-value">被己方掩体遮挡</small>
+            </div>
+
+            <div class="hud-left">
+              <div class="hud-row"><span>镜位</span><strong id="camera-value">稳定</strong></div>
+              <div class="hud-row"><span>姿态</span><strong id="stance-value">游走</strong></div>
+              <div class="hud-row"><span>横移</span><strong id="offset-value">0.0 m</strong></div>
+              <div class="hud-row"><span>接触</span><strong id="contact-value">遮蔽</strong></div>
+            </div>
+
+            <div class="hud-right">
+              <div class="hud-row"><span>断趴</span><strong id="cancel-timing">-- ms</strong></div>
+              <div class="hud-row"><span>响应</span><strong id="peek-reaction">-- ms</strong></div>
+              <div class="hud-row"><span>停留</span><strong id="peek-hold">-- ms</strong></div>
+            </div>
+
+            <div class="crosshair" id="crosshair" aria-hidden="true">
+              <i class="crosshair-top"></i>
+              <i class="crosshair-right"></i>
+              <i class="crosshair-bottom"></i>
+              <i class="crosshair-left"></i>
+              <b></b>
+            </div>
+
+            <div class="cue-wrap">
+              <p class="cue-kicker" id="cue-kicker">自由训练</p>
+              <strong class="cue-main" id="cue-main">WASD</strong>
+              <p class="cue-hint" id="cue-hint">随意移动、趴伏与探身</p>
+            </div>
+
+            <div class="timing-meter" id="timing-meter" aria-hidden="true">
+              <span class="timing-good" id="timing-good"></span>
+              <span class="timing-pointer" id="timing-pointer"></span>
+            </div>
+
+            <div class="result-banner" id="result-banner" aria-live="polite">
+              <span id="result-rating">--</span>
+              <strong id="result-copy">等待第一组动作</strong>
+            </div>
+
+            <div class="touch-controls" aria-label="触控训练按键">
+              <button type="button" data-action="move" aria-label="游龙步">游龙步</button>
+              <button type="button" data-action="prone" aria-label="起趴">起趴</button>
+              <button type="button" data-action="sprint" aria-label="冲刺打断">打断</button>
+              <button type="button" data-action="strafe-left" aria-label="左闪 A">左闪 A</button>
+              <button type="button" data-action="strafe-right" aria-label="右闪 D">右闪 D</button>
+              <button type="button" data-action="lean" aria-label="探身">探身</button>
+            </div>
+          </div>
+
+          <div class="chain-monitor">
+            <div class="monitor-title">
+              <span>输入轨迹</span>
+              <span class="muted">按顺序记录最近动作</span>
+            </div>
+            <div class="event-track" id="event-track" aria-live="polite">
+              <span class="event-placeholder">等待按键输入</span>
+            </div>
+          </div>
+
+          <div class="telemetry-grid">
+            <div>
+              <span>尝试</span>
+              <strong id="attempt-value">0</strong>
+            </div>
+            <div>
+              <span>成功</span>
+              <strong id="success-value">0</strong>
+            </div>
+            <div>
+              <span>成功率</span>
+              <strong id="accuracy-value">0%</strong>
+            </div>
+            <div>
+              <span>最近评级</span>
+              <strong id="rating-value">--</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mechanics-section" id="mechanics" aria-labelledby="mechanics-title">
+      <div class="mechanics-copy">
+        <p class="context-label">为什么不能直接探身</p>
+        <h2 id="mechanics-title">差的不是探头，是探头前的那一拍</h2>
+        <p>直接探身只有横向位移。断趴把角色姿态与镜头状态短暂拆开，才可能出现视频里讨论的视角错位。是否真的影响受击判定，仍要以当前游戏版本实测为准。</p>
+      </div>
+
+      <div class="comparison">
+        <article class="compare-panel">
+          <div class="compare-head">
+            <span>直接 E</span>
+            <strong>单拍</strong>
+          </div>
+          <div class="diagram direct-diagram" aria-hidden="true">
+            <span class="cover-line"></span>
+            <span class="sight-line"></span>
+            <span class="figure figure-standing"></span>
+            <span class="offset-tag">横移有限</span>
+          </div>
+          <p>没有先制造低位姿态，探出时更容易直接进入对方预瞄线。</p>
+        </article>
+
+        <article class="compare-panel featured">
+          <div class="compare-head">
+            <span>断趴后 E/Q 或 A/D</span>
+            <strong>四拍</strong>
+          </div>
+          <div class="diagram ghost-diagram" aria-hidden="true">
+            <span class="cover-line"></span>
+            <span class="sight-line"></span>
+            <span class="figure figure-ghost"></span>
+            <span class="offset-tag">姿态错位</span>
+          </div>
+          <p>先进入趴伏前段，再打断并探身或横移闪身。训练重点是节奏与掩体关系，而不是盲目连按。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="drill-section" id="field-notes" aria-labelledby="drill-title">
+      <div class="drill-heading">
+        <p class="context-label">训练方法</p>
+        <h2 id="drill-title">先固定顺序，再缩短间隔</h2>
+      </div>
+
+      <div class="drill-layout">
+        <ol class="drill-list">
+          <li>
+            <span class="drill-key">01</span>
+            <div>
+              <h3>只练断趴</h3>
+              <p>先不看探身。连续做 W + Shift，Z，松开 Shift，再按 Shift，直到不会变成完整趴伏。</p>
+            </div>
+          </li>
+          <li>
+            <span class="drill-key">02</span>
+            <div>
+              <h3>加入单侧探身</h3>
+              <p>固定使用 E 或 D，等 GHOST 窗口亮起再出掩体。不要用快速连按代替时机判断。</p>
+            </div>
+          </li>
+          <li>
+            <span class="drill-key">03</span>
+            <div>
+              <h3>练“探出与收回”</h3>
+              <p>每次保持约 200-500 ms 后松开。把回位当成动作的一部分，避免探身后僵住。</p>
+            </div>
+          </li>
+          <li>
+            <span class="drill-key">04</span>
+            <div>
+              <h3>换边与换节奏</h3>
+              <p>右探稳定后加入 Q 左探；使用闪身时则在 A 与 D 之间交替，避免只记住一条固定线路。</p>
+            </div>
+          </li>
+        </ol>
+
+        <aside class="notes-panel">
+          <h3>练习时只看三件事</h3>
+          <div class="note-row">
+            <span>顺序</span>
+            <p>起趴是否发生在游龙步之后。</p>
+          </div>
+          <div class="note-row">
+            <span>时机</span>
+            <p>Shift 是否在趴伏前段完成打断。</p>
+          </div>
+          <div class="note-row">
+            <span>回位</span>
+            <p>探身后是否主动松开，而不是一直挂着。</p>
+          </div>
+          <a class="source-link" href="https://v.douyin.com/HlCKax5zS6k/" target="_blank" rel="noreferrer">打开参考抖音视频</a>
+        </aside>
+      </div>
+
+      <p class="field-caution">说明：本页是按键节奏模拟器，不接入游戏进程，也不代表官方判定。评论区的动作解释用于拆解练习顺序，最终手感请以训练场和当前版本实测为准。</p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>鬼趴 PEEK 训练舱</span>
+    <span>本地运行，不采集输入数据</span>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
